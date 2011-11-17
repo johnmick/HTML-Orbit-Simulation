@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en">
+	<head>
+		<title>Orbit Simulation</title>
+		<link type="text/css" href="./css/master.css" rel="stylesheet"/>
+	</head>
+	<body>
+
+		<div id="CONTAINER">
+			<div id="TITLE_HEADER">
+				<span>HTML5 Orbit Simulation</span>
+			</div>
+
+			<div id="CONTROLS">
+				<div id="CONTROL_HEADER">
+					<span id="CONTROL_LABEL">Parameters</span>
+				</div>
+
+				<div class="INPUT_CONTROL_CONTAINER">
+					<span class="INPUT_LABEL">Satellite Mass</span><br/>
+					<input id="SAT_MASS_INPUT" class="INPUT_CONTROL" type="text" maxlength="3" /> 
+				</div>
+
+				<div class="INPUT_CONTROL_CONTAINER">
+					<span class="INPUT_LABEL">Earth Mass</span><br/>
+					<input id="EARTH_MASS_INPUT" class="INPUT_CONTROL" type="text" maxlength="3" /> 
+				</div>
+
+				<div class="INPUT_CONTROL_CONTAINER">
+					<span class="INPUT_LABEL">Initial X Velocity</span><br/>
+					<input id="INIT_X_INPUT" class="INPUT_CONTROL" type="text" maxlength="3" /> 
+				</div>
+
+				<div class="INPUT_CONTROL_CONTAINER">
+					<span class="INPUT_LABEL">Initial Y Velocity</span><br/>
+					<input id="INIT_Y_INPUT" class="INPUT_CONTROL" type="text" maxlength="3" /> 
+				</div>
+			</div>
+
+			<div id="CANVAS">
+				<canvas id="CANVAS_BOARD" width="620px" height="500px"></canvas>
+			</div>
+
+			<div id="FOOTER">
+				<span>Tested in Firefox 8.0 and Chrome 15 Only</span>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="./js/ext/jquery-1.7.min.js"></script>
+		<script type="text/javascript" src="./js/build/orbits.js"></script>	
+	</body>
+</html>

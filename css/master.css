@@ -1,0 +1,98 @@
+/* MASTER PAGE STYLES */
+	body
+	{
+		/*background-color:#7070A9;*/
+		/*background-color:#505089;*/
+		background-image: linear-gradient(right , #606099 18%, #9090C9 80%);
+		background-image: -o-linear-gradient(right , #606099 18%, #9090C9 80%);
+		background-image: -moz-linear-gradient(right , #606099 18%, #9090C9 80%);
+		background-image: -webkit-linear-gradient(right , #606099 18%, #9090C9 80%);
+		background-image: -ms-linear-gradient(right , #606099 18%, #9090C9 80%);
+
+		background-image: -webkit-gradient(
+			linear,
+			right top,
+			left top,
+			color-stop(0.18, #606099),
+			color-stop(0.8, #9090C9)
+		);
+		font-family:Arial;
+	}
+
+	div#CONTAINER
+	{
+		width:800px;
+		margin:0px auto 0px auto;
+	}
+
+	div#TITLE_HEADER
+	{
+		text-align:center;
+		font-weight:bold;
+		color:#E0E0E9;
+		text-shadow:2px 2px 2px #202089;
+		font-size:35px;
+	}
+
+	div#FOOTER
+	{
+		text-align:right;
+		padding-right:30px;
+		font-size:12px;
+	}
+
+/* CONTROL STYLES */
+	div#CONTROLS
+	{
+		background-color:#7070A9;
+		text-align:center;
+
+		width:160px;
+		height:500px;
+		margin-right:3px;
+		float:left;
+		border-radius:35px 10px 10px 35px;
+		-moz-border-radius:35px 10px 10px 35px;
+	}
+
+	div#CONTROL_HEADER
+	{
+		text-align:center;
+		padding:10px 0px 25px 0px;
+	}
+
+	span#CONTROL_LABEL
+	{
+		font-size:25px;
+		text-shadow:2px 2px 2px #000000;
+		color:#E0E0E9;
+		font-weight:bold;
+	}
+
+	span.INPUT_LABEL
+	{
+		text-shadow:1px 1px 1px #FFFFFF;
+		color:#000000;
+		font-weight:bold;
+
+	}
+
+	input.INPUT_CONTROL
+	{
+		text-align:center;
+		width:80px;
+		background-color:#EFEFEF;
+		margin-bottom:15px;
+
+	}
+
+/* CANVAS STYLES */
+	div#CANVAS
+	{
+		background-color:#000000;
+		width:620px;
+		height:500px;
+		float:left;
+		border-radius:10px 35px 35px 10px;
+		-moz-border-radius:10px 35px 35px 10px;
+	}
