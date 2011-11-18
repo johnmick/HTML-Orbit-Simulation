@@ -4,6 +4,7 @@
 	<head>
 		<title>Orbit Simulation</title>
 		<link type="text/css" href="./css/master.css" rel="stylesheet"/>
+		<link type="text/css" href="./css/jquery-ui-1.8.16.custom.css" rel="stylesheet"/>
 	</head>
 	<body>
 
@@ -19,22 +20,29 @@
 
 				<div class="INPUT_CONTROL_CONTAINER">
 					<span class="INPUT_LABEL">Satellite Mass</span><br/>
-					<input id="SAT_MASS_INPUT" class="INPUT_CONTROL" type="text" maxlength="3" /> 
+					<input id="SAT_MASS_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" /> 
 				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
 					<span class="INPUT_LABEL">Earth Mass</span><br/>
-					<input id="EARTH_MASS_INPUT" class="INPUT_CONTROL" type="text" maxlength="3" /> 
+					<span class="INPUT_VALUE" id="EARTH_MASS_LBL"></span>
+					<div class="INPUT_SLIDER" id="EARTH_MASS_INPUT"></div>
+					<!--<input id="EARTH_MASS_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" />-->
 				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
 					<span class="INPUT_LABEL">Initial X Velocity</span><br/>
-					<input id="INIT_X_INPUT" class="INPUT_CONTROL" type="text" maxlength="3" /> 
+					<input id="INIT_X_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" /> 
 				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
 					<span class="INPUT_LABEL">Initial Y Velocity</span><br/>
-					<input id="INIT_Y_INPUT" class="INPUT_CONTROL" type="text" maxlength="3" /> 
+					<input id="INIT_Y_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" /> 
+				</div>
+
+				<div class="INPUT_CONTROL_CONTAINER">
+					<span class="INPUT_LABEL">Reset Satellites</span><br/>
+					<input id="RESET_INPUT" class="INPUT_CONTROL" type="button" value="Reset"/> 
 				</div>
 			</div>
 
@@ -44,10 +52,12 @@
 
 			<div id="FOOTER">
 				<span>Tested in Firefox 8.0 and Chrome 15 Only</span>
+				<span id="DEBUG"></span>
 			</div>
 		</div>
 
 		<script type="text/javascript" src="./js/ext/jquery-1.7.min.js"></script>
+		<script type="text/javascript" src="./js/ext/jquery-ui-1.8.16.custom.min.js"></script>
 		<script type="text/javascript" src="./js/build/orbits.js"></script>	
 	</body>
 </html>

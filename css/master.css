@@ -55,10 +55,24 @@
 		-moz-border-radius:35px 10px 10px 35px;
 	}
 
+	div#INPUT_CONTROL_CONTAINER
+	{
+		width:50px;
+		margin-left:auto;
+		margin-right:auto;
+
+	}
+
 	div#CONTROL_HEADER
 	{
 		text-align:center;
 		padding:10px 0px 25px 0px;
+	}
+
+	div.INPUT_SLIDER
+	{
+		width:100px;
+		margin:10px auto 10px auto;
 	}
 
 	span#CONTROL_LABEL
