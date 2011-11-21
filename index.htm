@@ -14,8 +14,21 @@
 			</div>
 
 			<div id="CONTROLS">
-				<div id="CONTROL_HEADER">
-					<span id="CONTROL_LABEL">Parameters</span>
+				<div class="CONTROL_HEADER">
+					<span class="CONTROL_LABEL">Environment Parameters</span>
+				</div>
+
+				<div class="INPUT_CONTROL_CONTAINER">
+					<span class="INPUT_LABEL">Earth Mass</span><br/>
+					<span class="INPUT_VALUE" id="EARTH_MASS_LBL"></span>
+					<span class="INPUT_VALUE"> * 10e12</span>
+					<div class="INPUT_SLIDER" id="EARTH_MASS_INPUT"></div>
+				</div>
+
+				<hr />
+
+				<div class="CONTROL_HEADER">
+					<span class="CONTROL_LABEL">Next Generated Satellite Parameters</span>
 				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
@@ -23,12 +36,6 @@
 					<input id="SAT_MASS_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" /> 
 				</div>
 
-				<div class="INPUT_CONTROL_CONTAINER">
-					<span class="INPUT_LABEL">Earth Mass</span><br/>
-					<span class="INPUT_VALUE" id="EARTH_MASS_LBL"></span>
-					<div class="INPUT_SLIDER" id="EARTH_MASS_INPUT"></div>
-					<!--<input id="EARTH_MASS_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" />-->
-				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
 					<span class="INPUT_LABEL">Initial X Velocity</span><br/>
@@ -40,8 +47,10 @@
 					<input id="INIT_Y_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" /> 
 				</div>
 
+				<hr />
+
 				<div class="INPUT_CONTROL_CONTAINER">
-					<span class="INPUT_LABEL">Reset Satellites</span><br/>
+					<span class="CONTROL_LABEL">Reset Satellites</span><br/>
 					<input id="RESET_INPUT" class="INPUT_CONTROL" type="button" value="Reset"/> 
 				</div>
 			</div>
@@ -51,8 +60,8 @@
 			</div>
 
 			<div id="FOOTER">
-				<span>Tested in Firefox 8.0 and Chrome 15 Only</span>
-				<span id="DEBUG"></span>
+				<span>Tested in Firefox 8.0 and Chrome 15 Only ( Chrome Recommended )</span>
+				<br/><span id="DEBUG"></span>
 			</div>
 		</div>
 
