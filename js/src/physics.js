@@ -26,7 +26,6 @@
 		{
 			if (Math.abs(initialMag - currentMag) < .1)
 			{
-				debug.innerHTML = "Close to Original";
 				return "rgb(256, 256, 0)";
 			}
 			else if (currentMag > initialMag * 1.5)
@@ -35,17 +34,14 @@
 			}
 			else  if (currentMag > initialMag)
 			{
-				debug.innerHTML = "Faster to Original";
 				return "rgb(256, 128, 128)";
 			}
 			else if (currentMag > initialMag / 1.2)
 			{
-				debug.innerHTML = "Slower Than Half";
 				return "rgb(64, 64, 256)";
 			}
 			else
 			{
-				debug.innerHTML = "Slowest";
 				return "rgb(128, 256, 256)";
 			}
 		}
