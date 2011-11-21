@@ -3,14 +3,19 @@ var Orbits, Renderer, Physics, UI, Sat;
 var sats = [], earth, debug;
 
 (function(){
-    Orbits = function(opts) {
+	Orbits = function(opts) {
 		earth = opts.settings.earth;
 		Orbits.UI = UI(opts.ui);
 		Orbits.Renderer = Renderer(opts.renderer);
 		Orbits.Physics = Physics(opts.physics);
 		debug = document.getElementById("DEBUG");
 		return Orbits;
-    };
+	};
+
+	Orbits.setEarthMass = function(mass)
+	{
+		earth.m = mass * 10e12;
+	};
 })();
 (function(){
 	var ctx, earthImg, earthImgLoaded = false;
@@ -124,7 +129,6 @@ var sats = [], earth, debug;
 		{
 			if (Math.abs(initialMag - currentMag) < .1)
 			{
-				debug.innerHTML = "Close to Original";
 				return "rgb(256, 256, 0)";
 			}
 			else if (currentMag > initialMag * 1.5)
@@ -133,23 +137,20 @@ var sats = [], earth, debug;
 			}
 			else  if (currentMag > initialMag)
 			{
-				debug.innerHTML = "Faster to Original";
 				return "rgb(256, 128, 128)";
 			}
 			else if (currentMag > initialMag / 1.2)
 			{
-				debug.innerHTML = "Slower Than Half";
 				return "rgb(64, 64, 256)";
 			}
 			else
 			{
-				debug.innerHTML = "Slowest";
 				return "rgb(128, 256, 256)";
 			}
 		}
 })();
 (function(){
-	var canvas, satMass, earthMass, initX, initY, earthMassLbl;
+	var canvas, satMass, earthMass, initX, initY, earthMassLbl, satMassLbl, initXLbl, initYLbl;
 
 	UI = function(opts) {
 		UI.canvas = canvas = document.getElementById(opts.canvas);
@@ -159,26 +160,70 @@ var sats = [], earth, debug;
 		initY = document.getElementById(opts.inity);
 
 		earthMassLbl = document.getElementById(opts.earthmasslbl);
+		earthMassLbl.innerHTML = earth.m;
+
+		satMassLbl = document.getElementById(opts.satmasslbl);
+		satMassLbl.innerHTML = opts.defaultsatmass;
+
+		initXLbl = document.getElementById(opts.initxlbl);
+		initXLbl.innerHTML = opts.defaultinitx;
+
+		initYLbl = document.getElementById(opts.initylbl);
+		initYLbl.innerHTML = opts.defaultinity;
 
 		$(earthMass).slider({
 			slide: function(event, ui)
 			{
-				earthMassLbl.innerHTML = ui.value;
-			}
-			
+				var mass = parseFloat(ui.value);
+				earthMassLbl.innerHTML = mass;
+				Orbits.setEarthMass(mass);
+			},
+			value:earth.m,
+			min:1,
+			max:100,
+			step:1
+		});
+
+		$(satMass).slider({
+			slide: function(event, ui)
+			{
+				var mass = parseFloat(ui.value);
+				satMassLbl.innerHTML = mass;
+			},
+			value:opts.defaultsatmass,
+			min:.2,
+			max:25,
+			step:.2
+		});
+
+		$(initX).slider({
+			slide: function(event, ui)
+			{
+				initXLbl.innerHTML = ui.value;
+			},
+			value:opts.defaultinitx,
+			min:-10,
+			max:10,
+			step:.25
+		});
+
+		$(initY).slider({
+			slide: function(event, ui)
+			{
+				initYLbl.innerHTML = ui.value;
+			},
+			value:opts.defaultinity,
+			min:-10,
+			max:10,
+			step:.25
 		});
 
 		$(satMass).val(opts.defaultsatmass);
 		$(earthMass).val(opts.defaultearthmass);
 		$(initX).val(opts.defaultinitx);
 		$(initY).val(opts.defaultinity);
-
 		$(UI.canvas).click(canvasClicked);
 		$("#RESET_INPUT").click(function() { sats = []; });
-		$(earthMass).change(function(){
-			earth.m = parseFloat($(earthMass).val()) * 1e11;
-			console.log("Changed");
-		});
 		return UI;
 	};
 
@@ -191,14 +236,14 @@ var sats = [], earth, debug;
 			obj = obj.offsetParent;
 		}
 
-		earth.m = parseFloat($(earthMass).val()) * 1e11;
+		Orbits.setEarthMass(parseFloat(earthMassLbl.innerHTML));
 
 		sats.push(new Sat({
 			x: parseInt(e.clientX - left + window.pageXOffset),
 			y: parseInt(e.clientY - top + window.pageYOffset),
-			u: parseFloat($(initX).val()),
-			v: parseFloat($(initY).val()),
-			m: parseFloat($(satMass).val())
+			u: parseFloat($(initX).slider("value")),
+			v: parseFloat($(initY).slider("value")),
+			m: parseFloat($(satMass).slider("value"))
 		}));
 	}
 })();
@@ -233,7 +278,6 @@ var sats = [], earth, debug;
 	window.Orbits = Orbits({
 		renderer:{
 			earthimg:"./images/earth.png"
-
 		},
 		physics:{
 
@@ -241,21 +285,24 @@ var sats = [], earth, debug;
 		ui:{
 			canvas:"CANVAS_BOARD",
 			satmass:"SAT_MASS_INPUT",
+			satmasslbl:"SAT_MASS_LBL",
 			earthmass:"EARTH_MASS_INPUT",
 			earthmasslbl:"EARTH_MASS_LBL",
 			initx:"INIT_X_INPUT",
+			initxlbl:"INIT_X_LBL",
 			inity:"INIT_Y_INPUT",
+			initylbl:"INIT_Y_LBL",
 			defaultsatmass:1,
 			defaultearthmass:1000,
 			defaultinitx: -1,
-			defaultinity: .2
+			defaultinity: -.75 
 		},
 		settings:{
 			earth: {
 				x: 310,
 				y: 250,
 				r: 10,
-				m: 100
+				m: 50
 			}
 		}
 	});
