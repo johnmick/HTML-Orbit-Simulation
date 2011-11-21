@@ -22,3 +22,10 @@ Known Current Limitations of Simulation :
 	- The satellite's do not pull on each other, nor do they pull on the Earth object
 	- No collision detection implemented
 	- Not accounting for many other forces which may impact a satellite orbiting earth
+
+Possible Future Plans:
+  - Color Points on Absolute Velocities As Opposed to Comparing Against Initial Speed - Possible Gradient Solution
+	- Remove Points After the Tail Reaches a Certain Length
+	- Add real units to the display
+	- Provide scaling - zooming in and out - convert physics calcs to pixels
+	- Provide a reference of distance - radial grid or perhaps the Moon
