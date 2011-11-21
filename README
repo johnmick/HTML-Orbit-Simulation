@@ -1,1 +1,21 @@
-Force is only calculated on the orbitting objects - the center object is not capable of being pulled at this time, nor do the satellites pull on each other.
+###################################################
+#          HTML 5 Orbit Simulation                #
+#                                                 #
+# Purpose:                                        #
+#  Attempts to provide a friendly user interface  #
+#  to quickly experiment with orbital patterns    #
+#                                                 #
+###################################################
+
+To Calculate Force Between Two Objects, Uses Newton's Law of Gravitation: F = G* ( M * m ) / d  
+	F - Force of Attraction
+	G - Gravitational Constant
+	M - Mass of Earth
+	m - Mass of Satellite
+	d - Distance between satellite and geocenter of Earth
+
+Known Current Limitations of Simulation :
+	- Force is only being calculated between each satellite and the center Earth object.
+	- The satellite's do not pull on each other, nor do they pull on the Earth object
+	- No collision detection implemented
+	- Not accounting for many other forces which may impact a satellite orbiting earth
