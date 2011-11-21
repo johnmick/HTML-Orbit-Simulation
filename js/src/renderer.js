@@ -55,9 +55,8 @@
 		}
 		else
 		{
-			ctx.drawImage(earthImg, earth.x, earth.y);
+			ctx.drawImage(earthImg, earth.x-earthImg.width/2, earth.y-earthImg.height/2);
 		}
-
 	}
 
 
