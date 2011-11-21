@@ -5,6 +5,9 @@
 #  Attempts to provide a friendly user interface  #
 #  to quickly experiment with orbital patterns    #
 #                                                 #
+# Live Demo Available At:                         #
+#  http://www.johnmick.net/orbits                 #
+#                                                 #
 ###################################################
 
 To Calculate Force Between Two Objects, Uses Newton's Law of Gravitation: F = G* ( M * m ) / d  
