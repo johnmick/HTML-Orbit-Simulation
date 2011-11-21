@@ -19,32 +19,35 @@
 				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
-					<span class="INPUT_LABEL">Earth Mass</span><br/>
+					<span class="INPUT_LABEL">Earth Mass:</span><br/>
 					<span class="INPUT_VALUE" id="EARTH_MASS_LBL"></span>
-					<span class="INPUT_VALUE"> * 10e12</span>
+					<span class="INPUT_VALUE"> * 10e12</span><br/>
 					<div class="INPUT_SLIDER" id="EARTH_MASS_INPUT"></div>
 				</div>
 
 				<hr />
 
 				<div class="CONTROL_HEADER">
-					<span class="CONTROL_LABEL">Next Generated Satellite Parameters</span>
+					<span class="CONTROL_LABEL">Next Satellite Parameters</span>
 				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
-					<span class="INPUT_LABEL">Satellite Mass</span><br/>
-					<input id="SAT_MASS_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" /> 
+					<span class="INPUT_LABEL">Satellite Mass:</span><br/>
+					<span class="INPUT_VALUE" id="SAT_MASS_LBL"></span><br/>
+					<div class="INPUT_SLIDER" id="SAT_MASS_INPUT"></div>
 				</div>
 
 
 				<div class="INPUT_CONTROL_CONTAINER">
-					<span class="INPUT_LABEL">Initial X Velocity</span><br/>
-					<input id="INIT_X_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" /> 
+					<span class="INPUT_LABEL">Initial X Velocity:</span><br/>
+					<span class="INPUT_VALUE" id="INIT_X_LBL"></span><br/>
+					<div class="INPUT_SLIDER" id="INIT_X_INPUT"></div>
 				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
-					<span class="INPUT_LABEL">Initial Y Velocity</span><br/>
-					<input id="INIT_Y_INPUT" class="INPUT_CONTROL" type="text" maxlength="7" /> 
+					<span class="INPUT_LABEL">Initial Y Velocity:</span><br/>
+					<span class="INPUT_VALUE" id="INIT_Y_LBL"></span><br/>
+					<div class="INPUT_SLIDER" id="INIT_Y_INPUT"></div>
 				</div>
 
 				<hr />
@@ -60,13 +63,14 @@
 			</div>
 
 			<div id="FOOTER">
-				<span>Tested in Firefox 8.0 and Chrome 15 Only ( Chrome Recommended )</span>
+				<span>Tested in Firefox 8.0 and Chrome 15 Only ( Chrome Recommended )</span><br/>
+				<span>Note: Prototype Application - No Limit to Simulation Runtime So Watch Memory Usage</span>
 				<br/><span id="DEBUG"></span>
 			</div>
 		</div>
 
 		<script type="text/javascript" src="./js/ext/jquery-1.7.min.js"></script>
 		<script type="text/javascript" src="./js/ext/jquery-ui-1.8.16.custom.min.js"></script>
-		<script type="text/javascript" src="./js/build/orbits.js"></script>	
+		<script type="text/javascript" src="./js/build/orbits.min.js"></script>	
 	</body>
 </html>
