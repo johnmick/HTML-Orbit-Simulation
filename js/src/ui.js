@@ -9,13 +9,20 @@
 		initY = document.getElementById(opts.inity);
 
 		earthMassLbl = document.getElementById(opts.earthmasslbl);
+		earthMassLbl.innerHTML = earth.m;
+		console.log(earth.m);
 
 		$(earthMass).slider({
 			slide: function(event, ui)
 			{
-				earthMassLbl.innerHTML = ui.value;
-			}
-			
+				var mass = parseFloat(ui.value);
+				earthMassLbl.innerHTML = mass;
+				Orbits.setEarthMass(mass);
+			},
+			value:earth.m,
+			min:1,
+			max:100,
+			step:1
 		});
 
 		$(satMass).val(opts.defaultsatmass);
@@ -25,10 +32,6 @@
 
 		$(UI.canvas).click(canvasClicked);
 		$("#RESET_INPUT").click(function() { sats = []; });
-		$(earthMass).change(function(){
-			earth.m = parseFloat($(earthMass).val()) * 1e11;
-			console.log("Changed");
-		});
 		return UI;
 	};
 
@@ -41,7 +44,7 @@
 			obj = obj.offsetParent;
 		}
 
-		earth.m = parseFloat($(earthMass).val()) * 1e11;
+		Orbits.setEarthMass(parseFloat(earthMassLbl.innerHTML));
 
 		sats.push(new Sat({
 			x: parseInt(e.clientX - left + window.pageXOffset),
