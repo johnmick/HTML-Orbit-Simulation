@@ -1,26 +1,64 @@
 (function(){
-	var ctx;
+	var ctx, earthImg, earthImgLoaded = false;
 
 	Renderer = function(opts) {
 		ctx = UI.canvas.getContext('2d');
-
-		drawCircle({
-			x: opts.earthX,
-			y: opts.earthY,
-			radius: opts.earthR,
-			strokeStyle: "#00FF00",
-			fillStyle: "#00FF00"
-		});
+		earthImg = new Image();
+		earthImg.src = opts.earthimg;
+		earthImg.onload = function() { earthImgLoaded = true; };
 
 		return Renderer;
 	};
 
-	Renderer.drawSatellite = function(opts)
+	Renderer.redraw = function()
 	{
+		clearCanvas();
+		drawEarth();
+		for (var sat in sats)
+		{
+			sats[sat].draw();
 
+		}
 	};
 
-	Renderer.drawCircle = drawCircle;
+	Renderer.drawSatellite = function(opts)
+	{
+		drawCircle(opts);
+		var i;
+		for (i = opts.xpoints.length-1; i > -1; i--)
+		{
+			drawCircle({
+				x: opts.xpoints[i],
+				y: opts.ypoints[i],
+				radius:1,
+				fillStyle: opts.colors[i]
+			});
+		}
+	};
+
+	function clearCanvas()
+	{
+		ctx.clearRect(0, 0, UI.canvas.width, UI.canvas.height);
+	}
+
+	function drawEarth()
+	{
+		if (earthImgLoaded === false)
+		{
+			drawCircle({
+				x: earth.x,
+				y: earth.y,
+				radius: earth.r,
+				strokeStyle: "#00FF00",
+				fillStyle: "#00FF00"
+			});
+		}
+		else
+		{
+			ctx.drawImage(earthImg, earth.x, earth.y);
+		}
+
+	}
 
 
 	function drawCircle(opts)

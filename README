@@ -1,0 +1,1 @@
+Force is only calculated on the orbitting objects - the center object is not capable of being pulled at this time, nor do the satellites pull on each other.

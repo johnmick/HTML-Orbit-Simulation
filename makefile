@@ -9,6 +9,7 @@ BASE_FILES = ${SRC_DIR}/intro.js\
 	${SRC_DIR}/renderer.js\
 	${SRC_DIR}/physics.js\
 	${SRC_DIR}/ui.js\
+	${SRC_DIR}/sat.js\
 	${SRC_DIR}/main.js\
 	${SRC_DIR}/outro.js
 
