@@ -63,21 +63,26 @@
 
 	}
 
-	div#CONTROL_HEADER
+	div.CONTROL_HEADER
 	{
 		text-align:center;
-		padding:10px 0px 25px 0px;
+		padding:10px 0px 15px 0px;
+	}
+
+	INPUT#RESET_INPUT
+	{
+		margin-top:5px;
 	}
 
 	div.INPUT_SLIDER
 	{
-		width:100px;
+		width:120px;
 		margin:10px auto 10px auto;
 	}
 
-	span#CONTROL_LABEL
+	span.CONTROL_LABEL
 	{
-		font-size:25px;
+		font-size:18px;
 		text-shadow:2px 2px 2px #000000;
 		color:#E0E0E9;
 		font-weight:bold;
@@ -87,6 +92,13 @@
 	{
 		text-shadow:1px 1px 1px #FFFFFF;
 		color:#000000;
+		font-weight:bold;
+	}
+
+	span.INPUT_VALUE
+	{
+		text-shadow:1px 1px 1px #000000;
+		color:#AAAAFF;
 		font-weight:bold;
 
 	}
