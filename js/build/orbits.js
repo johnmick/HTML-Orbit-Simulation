@@ -14,7 +14,7 @@ var sats = [], earth, debug;
 
 	Orbits.setEarthMass = function(mass)
 	{
-		earth.m = mass * 10e12;
+		earth.m = mass * 10e10;
 	};
 })();
 (function(){
@@ -32,12 +32,11 @@ var sats = [], earth, debug;
 	Renderer.redraw = function()
 	{
 		clearCanvas();
-		drawEarth();
 		for (var sat in sats)
 		{
 			sats[sat].draw();
-
 		}
+		drawEarth();
 	};
 
 	Renderer.drawSatellite = function(opts)
@@ -107,20 +106,33 @@ var sats = [], earth, debug;
 
 		Physics.reCalc = function()
 		{
-			for (var sat in sats)
+			var collisions = [];
+			for (var i = sats.length-1; i > -1; i--)
 			{
-				var s = sats[sat];
-				var d = (s.x + earth.x) * (s.x + earth.x) + (s.y + earth.y) * (s.y + earth.y);
-				var theta = Math.atan2(s.y - earth.y, s.x - earth.x);
-				var k = -6.67300e-11 * earth.m * s.m / d;
-				s.u += k * Math.cos(theta);
-				s.v += k * Math.sin(theta);
-				s.xpoints.push(s.x);
-				s.ypoints.push(s.y);
-				s.colors.push(calcLineColor(s.initSpeed, Math.sqrt((s.u * s.u) + (s.v * s.v))));
-				
-				s.x += s.u;
-				s.y += s.v;
+				var s = sats[i];
+				var d = (s.x - earth.x) * (s.x - earth.x) + (s.y - earth.y) * (s.y - earth.y);
+
+				if (d <= earth.r2)
+				{
+					collisions.push(i);
+				}
+				else
+				{
+					var theta = Math.atan2(s.y - earth.y, s.x - earth.x);
+					var k = -6.67300e-11 * earth.m * s.m / d;
+					s.u += (k * Math.cos(theta)) / s.m;
+					s.v += (k * Math.sin(theta)) / s.m;
+					s.xpoints.push(s.x);
+					s.ypoints.push(s.y);
+					s.colors.push(calcLineColor(s.initSpeed, Math.sqrt((s.u * s.u) + (s.v * s.v))));
+					s.x += s.u;
+					s.y += s.v;
+				}
+			}
+
+			for (var i = collisions.length-1; i > -1; i--)
+			{
+				sats.splice(collisions[i], 1);
 			}
 		};
 
@@ -159,7 +171,7 @@ var sats = [], earth, debug;
 		initY = document.getElementById(opts.inity);
 
 		earthMassLbl = document.getElementById(opts.earthmasslbl);
-		earthMassLbl.innerHTML = earth.m;
+		earthMassLbl.innerHTML = opts.defaultearthmass;
 
 		satMassLbl = document.getElementById(opts.satmasslbl);
 		satMassLbl.innerHTML = opts.defaultsatmass;
@@ -177,7 +189,7 @@ var sats = [], earth, debug;
 				earthMassLbl.innerHTML = mass;
 				Orbits.setEarthMass(mass);
 			},
-			value:earth.m,
+			value:opts.defaultearthmass,
 			min:1,
 			max:100,
 			step:1
@@ -190,9 +202,9 @@ var sats = [], earth, debug;
 				satMassLbl.innerHTML = mass;
 			},
 			value:opts.defaultsatmass,
-			min:.2,
-			max:25,
-			step:.2
+			min:1,
+			max:30,
+			step:1
 		});
 
 		$(initX).slider({
@@ -201,9 +213,9 @@ var sats = [], earth, debug;
 				initXLbl.innerHTML = ui.value;
 			},
 			value:opts.defaultinitx,
-			min:-10,
-			max:10,
-			step:.25
+			min:-3,
+			max:3,
+			step:.5
 		});
 
 		$(initY).slider({
@@ -212,9 +224,9 @@ var sats = [], earth, debug;
 				initYLbl.innerHTML = ui.value;
 			},
 			value:opts.defaultinity,
-			min:-10,
-			max:10,
-			step:.25
+			min:-3,
+			max:3,
+			step:.5
 		});
 
 		$(satMass).val(opts.defaultsatmass);
@@ -291,17 +303,17 @@ var sats = [], earth, debug;
 			initxlbl:"INIT_X_LBL",
 			inity:"INIT_Y_INPUT",
 			initylbl:"INIT_Y_LBL",
-			defaultsatmass:1,
-			defaultearthmass:1000,
-			defaultinitx: -1,
-			defaultinity: -.75 
+			defaultsatmass:15,
+			defaultearthmass:50,
+			defaultinitx: .5,
+			defaultinity: .5
 		},
 		settings:{
 			earth: {
 				x: 310,
 				y: 250,
 				r: 10,
-				m: 50
+				r2: 10*10
 			}
 		}
 	});
