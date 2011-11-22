@@ -13,12 +13,11 @@
 	Renderer.redraw = function()
 	{
 		clearCanvas();
-		drawEarth();
 		for (var sat in sats)
 		{
 			sats[sat].draw();
-
 		}
+		drawEarth();
 	};
 
 	Renderer.drawSatellite = function(opts)
