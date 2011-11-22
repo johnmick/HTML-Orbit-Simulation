@@ -20,7 +20,7 @@ To Calculate Force Between Two Objects, Uses Newton's Law of Gravitation: F = G*
 Known Current Limitations of Simulation :
 	- Force is only being calculated between each satellite and the center Earth object.
 	- The satellite's do not pull on each other, nor do they pull on the Earth object
-	- No collision detection implemented
+	- No collision detection between satellites implemented
 	- Not accounting for many other forces which may impact a satellite orbiting earth
 
 Possible Future Plans:
