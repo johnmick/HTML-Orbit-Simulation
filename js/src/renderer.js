@@ -22,7 +22,6 @@
 
 	Renderer.drawSatellite = function(opts)
 	{
-		drawCircle(opts);
 		var i;
 		for (i = opts.xpoints.length-1; i > -1; i--)
 		{
@@ -33,6 +32,7 @@
 				fillStyle: opts.colors[i]
 			});
 		}
+		drawCircle(opts);
 	};
 
 	function clearCanvas()
