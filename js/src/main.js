@@ -16,17 +16,17 @@
 			initxlbl:"INIT_X_LBL",
 			inity:"INIT_Y_INPUT",
 			initylbl:"INIT_Y_LBL",
-			defaultsatmass:1,
-			defaultearthmass:1000,
-			defaultinitx: -1,
-			defaultinity: -.75 
+			defaultsatmass:15,
+			defaultearthmass:50,
+			defaultinitx: .5,
+			defaultinity: .5
 		},
 		settings:{
 			earth: {
 				x: 310,
 				y: 250,
 				r: 10,
-				m: 50
+				r2: 10*10
 			}
 		}
 	});
