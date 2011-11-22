@@ -13,6 +13,6 @@ var sats = [], earth, debug;
 
 	Orbits.setEarthMass = function(mass)
 	{
-		earth.m = mass * 10e12;
+		earth.m = mass * 10e10;
 	};
 })();
