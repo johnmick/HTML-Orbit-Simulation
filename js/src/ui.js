@@ -9,7 +9,7 @@
 		initY = document.getElementById(opts.inity);
 
 		earthMassLbl = document.getElementById(opts.earthmasslbl);
-		earthMassLbl.innerHTML = earth.m;
+		earthMassLbl.innerHTML = opts.defaultearthmass;
 
 		satMassLbl = document.getElementById(opts.satmasslbl);
 		satMassLbl.innerHTML = opts.defaultsatmass;
@@ -27,7 +27,7 @@
 				earthMassLbl.innerHTML = mass;
 				Orbits.setEarthMass(mass);
 			},
-			value:earth.m,
+			value:opts.defaultearthmass,
 			min:1,
 			max:100,
 			step:1
@@ -40,9 +40,9 @@
 				satMassLbl.innerHTML = mass;
 			},
 			value:opts.defaultsatmass,
-			min:.2,
-			max:25,
-			step:.2
+			min:1,
+			max:30,
+			step:1
 		});
 
 		$(initX).slider({
@@ -51,9 +51,9 @@
 				initXLbl.innerHTML = ui.value;
 			},
 			value:opts.defaultinitx,
-			min:-10,
-			max:10,
-			step:.25
+			min:-3,
+			max:3,
+			step:.5
 		});
 
 		$(initY).slider({
@@ -62,9 +62,9 @@
 				initYLbl.innerHTML = ui.value;
 			},
 			value:opts.defaultinity,
-			min:-10,
-			max:10,
-			step:.25
+			min:-3,
+			max:3,
+			step:.5
 		});
 
 		$(satMass).val(opts.defaultsatmass);
