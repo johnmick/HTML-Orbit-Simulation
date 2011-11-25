@@ -16,9 +16,9 @@
 		Renderer.drawSatellite({
 			x: this.x, 
 			y: this.y,
-			radius: 5,
+			radius: 3.75,
 			strokeStyle: "#FFFFFF",
-			fillStyle: "#0000FF",
+			fillStyle: "#FFFFFF",
 			xpoints:this.xpoints,
 			ypoints:this.ypoints,
 			colors:this.colors
