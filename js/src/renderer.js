@@ -6,7 +6,6 @@
 		earthImg = new Image();
 		earthImg.src = opts.earthimg;
 		earthImg.onload = function() { earthImgLoaded = true; };
-
 		return Renderer;
 	};
 
@@ -22,14 +21,16 @@
 
 	Renderer.drawSatellite = function(opts)
 	{
-		var i;
-		for (i = opts.xpoints.length-1; i > -1; i--)
+		var xpoints = opts.xpoints;
+		var ypoints = opts.ypoints;
+		var colors = opts.colors;
+		for (var i = xpoints.length-1; i > -1; i=i-10)
 		{
 			drawCircle({
-				x: opts.xpoints[i],
-				y: opts.ypoints[i],
-				radius:1,
-				fillStyle: opts.colors[i]
+				x:xpoints[i],
+				y:ypoints[i],
+				radius:1.25,
+				fillStyle:colors[i]
 			});
 		}
 		drawCircle(opts);
