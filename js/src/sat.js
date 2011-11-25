@@ -17,7 +17,7 @@
 			x: this.x, 
 			y: this.y,
 			radius: 5,
-			strokeStyle: "#FF0000",
+			strokeStyle: "#FFFFFF",
 			fillStyle: "#0000FF",
 			xpoints:this.xpoints,
 			ypoints:this.ypoints,
