@@ -18,22 +18,27 @@
 			initylbl:"INIT_Y_LBL",
 			defaultsatmass:15,
 			defaultearthmass:50,
-			defaultinitx: .5,
-			defaultinity: .5
+			defaultinitx: 1,
+			defaultinity: 1
 		},
 		settings:{
 			earth: {
 				x: 310,
 				y: 250,
 				r: 10,
-				r2: 10*10
+				r2: 10*10,
+				m:50
 			}
 		}
 	});
 
 	setInterval(function(){
-		Physics.reCalc();
 		Renderer.redraw();
+		Physics.reCalc();
 	}, 25);
 
+	sats.push(new Sat({x:150, y:150, u:1, v:0, m:15}));
+	sats.push(new Sat({x:150, y:350, u:1, v:0, m:15}));
+	sats.push(new Sat({x:460, y:150, u:-1, v:0, m:15}));
+	sats.push(new Sat({x:460, y:350, u:-1, v:0, m:15}));
 })();
