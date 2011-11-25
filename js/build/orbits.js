@@ -5,6 +5,7 @@ var sats = [], earth, debug;
 (function(){
 	Orbits = function(opts) {
 		earth = opts.settings.earth;
+		Orbits.setEarthMass(earth.m);
 		Orbits.UI = UI(opts.ui);
 		Orbits.Renderer = Renderer(opts.renderer);
 		Orbits.Physics = Physics(opts.physics);
@@ -25,7 +26,6 @@ var sats = [], earth, debug;
 		earthImg = new Image();
 		earthImg.src = opts.earthimg;
 		earthImg.onload = function() { earthImgLoaded = true; };
-
 		return Renderer;
 	};
 
@@ -41,17 +41,19 @@ var sats = [], earth, debug;
 
 	Renderer.drawSatellite = function(opts)
 	{
-		drawCircle(opts);
-		var i;
-		for (i = opts.xpoints.length-1; i > -1; i--)
+		var xpoints = opts.xpoints;
+		var ypoints = opts.ypoints;
+		var colors = opts.colors;
+		for (var i = xpoints.length-1; i > -1; i=i-10)
 		{
 			drawCircle({
-				x: opts.xpoints[i],
-				y: opts.ypoints[i],
-				radius:1,
-				fillStyle: opts.colors[i]
+				x:xpoints[i],
+				y:ypoints[i],
+				radius:1.25,
+				fillStyle:colors[i]
 			});
 		}
+		drawCircle(opts);
 	};
 
 	function clearCanvas()
@@ -276,9 +278,9 @@ var sats = [], earth, debug;
 		Renderer.drawSatellite({
 			x: this.x, 
 			y: this.y,
-			radius: 5,
-			strokeStyle: "#FF0000",
-			fillStyle: "#0000FF",
+			radius: 3.75,
+			strokeStyle: "#FFFFFF",
+			fillStyle: "#FFFFFF",
 			xpoints:this.xpoints,
 			ypoints:this.ypoints,
 			colors:this.colors
@@ -305,23 +307,28 @@ var sats = [], earth, debug;
 			initylbl:"INIT_Y_LBL",
 			defaultsatmass:15,
 			defaultearthmass:50,
-			defaultinitx: .5,
-			defaultinity: .5
+			defaultinitx: 1,
+			defaultinity: 1
 		},
 		settings:{
 			earth: {
 				x: 310,
 				y: 250,
 				r: 10,
-				r2: 10*10
+				r2: 10*10,
+				m:50
 			}
 		}
 	});
 
 	setInterval(function(){
-		Physics.reCalc();
 		Renderer.redraw();
+		Physics.reCalc();
 	}, 25);
 
+	sats.push(new Sat({x:150, y:150, u:1, v:0, m:15}));
+	sats.push(new Sat({x:150, y:350, u:1, v:0, m:15}));
+	sats.push(new Sat({x:460, y:150, u:-1, v:0, m:15}));
+	sats.push(new Sat({x:460, y:350, u:-1, v:0, m:15}));
 })();
 })();
