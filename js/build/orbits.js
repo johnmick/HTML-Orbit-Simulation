@@ -44,14 +44,27 @@ var sats = [], earth, debug;
 		var xpoints = opts.xpoints;
 		var ypoints = opts.ypoints;
 		var colors = opts.colors;
+		var c = opts.c;
 		for (var i = xpoints.length-1; i > -1; i=i-10)
 		{
-			drawCircle({
-				x:xpoints[i],
-				y:ypoints[i],
-				radius:1.25,
-				fillStyle:colors[i]
-			});
+			if (c !== undefined)
+			{
+				drawCircle({
+					x:xpoints[i],
+					y:ypoints[i],
+					radius:1.25,
+					fillStyle:c
+				});
+			}
+			else
+			{
+				drawCircle({
+					x:xpoints[i],
+					y:ypoints[i],
+					radius:1.25,
+					fillStyle:colors[i]
+				});
+			}
 		}
 		drawCircle(opts);
 	};
@@ -102,68 +115,85 @@ var sats = [], earth, debug;
 	}
 })();
 (function(){
-    Physics = function(opts) {
-			return Physics;
-    };
+	var timestep = 1;
 
-		Physics.reCalc = function()
+	Physics = function(opts) {
+		return Physics;
+	};
+
+	Physics.setTimestep = function(ts)
+	{
+		timestep = ts;
+	};
+
+	Physics.getTimestep = function()
+	{
+		return timestep;
+	};
+
+	Physics.reCalc = function(store)
+	{
+		var collisions = [];
+		for (var i = sats.length-1; i > -1; i--)
 		{
-			var collisions = [];
-			for (var i = sats.length-1; i > -1; i--)
-			{
-				var s = sats[i];
-				var d = (s.x - earth.x) * (s.x - earth.x) + (s.y - earth.y) * (s.y - earth.y);
+			var s = sats[i];
+			var d = (s.x - earth.x) * (s.x - earth.x) + (s.y - earth.y) * (s.y - earth.y);
 
-				if (d <= earth.r2)
-				{
-					collisions.push(i);
-				}
-				else
-				{
-					var theta = Math.atan2(s.y - earth.y, s.x - earth.x);
-					var k = -6.67300e-11 * earth.m * s.m / d;
-					s.u += (k * Math.cos(theta)) / s.m;
-					s.v += (k * Math.sin(theta)) / s.m;
-					s.xpoints.push(s.x);
-					s.ypoints.push(s.y);
-					s.colors.push(calcLineColor(s.initSpeed, Math.sqrt((s.u * s.u) + (s.v * s.v))));
-					s.x += s.u;
-					s.y += s.v;
-				}
-			}
-
-			for (var i = collisions.length-1; i > -1; i--)
+			if (d <= earth.r2)
 			{
-				sats.splice(collisions[i], 1);
-			}
-		};
-
-		function calcLineColor(initialMag, currentMag)
-		{
-			if (Math.abs(initialMag - currentMag) < .1)
-			{
-				return "rgb(256, 256, 0)";
-			}
-			else if (currentMag > initialMag * 1.5)
-			{
-				return "rgb(256, 0, 0)";
-			}
-			else  if (currentMag > initialMag)
-			{
-				return "rgb(256, 128, 128)";
-			}
-			else if (currentMag > initialMag / 1.2)
-			{
-				return "rgb(64, 64, 256)";
+				collisions.push(i);
 			}
 			else
 			{
-				return "rgb(128, 256, 256)";
+				var theta = Math.atan2(s.y - earth.y, s.x - earth.x);
+				var k = -6.67300e-11 * earth.m * s.m / d;
+				s.u += ((k * Math.cos(theta)) / s.m) * timestep;
+				s.v += ((k * Math.sin(theta)) / s.m) * timestep;
+
+				if (store === true)
+				{
+					s.xpoints.push(s.x);
+					s.ypoints.push(s.y);
+					s.colors.push(calcLineColor(s.initSpeed, Math.sqrt((s.u * s.u) + (s.v * s.v))));
+				}
+
+				s.x += s.u * timestep;
+				s.y += s.v * timestep;
 			}
 		}
+
+		for (var i = collisions.length-1; i > -1; i--)
+		{
+			sats.splice(collisions[i], 1);
+		}
+	};
+
+	function calcLineColor(initialMag, currentMag)
+	{
+		if (Math.abs(initialMag - currentMag) < .1)
+		{
+			return "rgb(256, 256, 0)";
+		}
+		else if (currentMag > initialMag * 1.5)
+		{
+			return "rgb(256, 0, 0)";
+		}
+		else  if (currentMag > initialMag)
+		{
+			return "rgb(256, 128, 128)";
+		}
+		else if (currentMag > initialMag / 1.2)
+		{
+			return "rgb(64, 64, 256)";
+		}
+		else
+		{
+			return "rgb(128, 256, 256)";
+		}
+	}
 })();
 (function(){
-	var canvas, satMass, earthMass, initX, initY, earthMassLbl, satMassLbl, initXLbl, initYLbl;
+	var canvas, satMass, earthMass, initX, initY, earthMassLbl, satMassLbl, initXLbl, initYLbl, timeStepLbl, timestep;
 
 	UI = function(opts) {
 		UI.canvas = canvas = document.getElementById(opts.canvas);
@@ -171,18 +201,20 @@ var sats = [], earth, debug;
 		earthMass = document.getElementById(opts.earthmass);
 		initX = document.getElementById(opts.initx);
 		initY = document.getElementById(opts.inity);
-
+		timestep = document.getElementById(opts.timestep);
 		earthMassLbl = document.getElementById(opts.earthmasslbl);
-		earthMassLbl.innerHTML = opts.defaultearthmass;
-
+		timeStepLbl = document.getElementById(opts.timesteplbl);
 		satMassLbl = document.getElementById(opts.satmasslbl);
-		satMassLbl.innerHTML = opts.defaultsatmass;
-
 		initXLbl = document.getElementById(opts.initxlbl);
-		initXLbl.innerHTML = opts.defaultinitx;
-
 		initYLbl = document.getElementById(opts.initylbl);
+
+		earthMassLbl.innerHTML = opts.defaultearthmass;
+		timeStepLbl.innerHTML = opts.defaulttimestep;
+		satMassLbl.innerHTML = opts.defaultsatmass;
+		initXLbl.innerHTML = opts.defaultinitx;
 		initYLbl.innerHTML = opts.defaultinity;
+		Physics.setTimestep(opts.defaulttimestep);
+
 
 		$(earthMass).slider({
 			slide: function(event, ui)
@@ -195,6 +227,19 @@ var sats = [], earth, debug;
 			min:1,
 			max:100,
 			step:1
+		});
+
+		$(timestep).slider({
+			slide: function(event, ui)
+			{
+				var ts = parseFloat(ui.value);
+				timeStepLbl.innerHTML = ts;
+				Physics.setTimestep(ts);
+			},
+			value:opts.defaulttimestep,
+			min:.01,
+			max:.1,
+			step:.01
 		});
 
 		$(satMass).slider({
@@ -271,6 +316,7 @@ var sats = [], earth, debug;
 		this.xpoints = [];
 		this.ypoints = [];
 		this.colors = [];
+		this.c = opts.c;
 	};
 
 	Sat.prototype.draw = function()
@@ -283,7 +329,8 @@ var sats = [], earth, debug;
 			fillStyle: "#FFFFFF",
 			xpoints:this.xpoints,
 			ypoints:this.ypoints,
-			colors:this.colors
+			colors:this.colors,
+			c:this.c
 		});
 	};
 })();
@@ -305,15 +352,18 @@ var sats = [], earth, debug;
 			initxlbl:"INIT_X_LBL",
 			inity:"INIT_Y_INPUT",
 			initylbl:"INIT_Y_LBL",
+			timesteplbl:"TIME_STEP_LBL",
+			timestep:"TIME_STEP_INPUT",
 			defaultsatmass:15,
-			defaultearthmass:50,
-			defaultinitx: 1,
-			defaultinity: 1
+			defaultearthmass:100,
+			defaultinitx: 0,
+			defaultinity: 1.5,
+			defaulttimestep:.01
 		},
 		settings:{
 			earth: {
 				x: 310,
-				y: 250,
+				y: 290,
 				r: 10,
 				r2: 10*10,
 				m:50
@@ -323,12 +373,16 @@ var sats = [], earth, debug;
 
 	setInterval(function(){
 		Renderer.redraw();
-		Physics.reCalc();
+		for (var i=30; i > -1; i--)
+		{
+			Physics.reCalc();
+		}
+		Physics.reCalc(true);
 	}, 25);
 
-	sats.push(new Sat({x:150, y:150, u:1, v:0, m:15}));
-	sats.push(new Sat({x:150, y:350, u:1, v:0, m:15}));
-	sats.push(new Sat({x:460, y:150, u:-1, v:0, m:15}));
-	sats.push(new Sat({x:460, y:350, u:-1, v:0, m:15}));
+	sats.push(new Sat({x:310, y:180, u:1.5, v:0, m:25, c:"#FF0000"}));
+	sats.push(new Sat({x:310, y:400, u:-1.5, v:0, m:25, c:"#FFFF00"}));
+	sats.push(new Sat({x:200, y:290, u:0, v:1.5, m:25, c:"#FF00FF"}));
+	sats.push(new Sat({x:420, y:290, u:0, v:-1.5, m:25, c:"#00FFFF"}));
 })();
 })();
