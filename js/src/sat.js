@@ -9,6 +9,7 @@
 		this.xpoints = [];
 		this.ypoints = [];
 		this.colors = [];
+		this.c = opts.c;
 	};
 
 	Sat.prototype.draw = function()
@@ -21,7 +22,8 @@
 			fillStyle: "#FFFFFF",
 			xpoints:this.xpoints,
 			ypoints:this.ypoints,
-			colors:this.colors
+			colors:this.colors,
+			c:this.c
 		});
 	};
 })();
