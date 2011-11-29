@@ -24,14 +24,27 @@
 		var xpoints = opts.xpoints;
 		var ypoints = opts.ypoints;
 		var colors = opts.colors;
+		var c = opts.c;
 		for (var i = xpoints.length-1; i > -1; i=i-10)
 		{
-			drawCircle({
-				x:xpoints[i],
-				y:ypoints[i],
-				radius:1.25,
-				fillStyle:colors[i]
-			});
+			if (c !== undefined)
+			{
+				drawCircle({
+					x:xpoints[i],
+					y:ypoints[i],
+					radius:1.25,
+					fillStyle:c
+				});
+			}
+			else
+			{
+				drawCircle({
+					x:xpoints[i],
+					y:ypoints[i],
+					radius:1.25,
+					fillStyle:colors[i]
+				});
+			}
 		}
 		drawCircle(opts);
 	};
