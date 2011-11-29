@@ -1,5 +1,5 @@
 (function(){
-	var canvas, satMass, earthMass, initX, initY, earthMassLbl, satMassLbl, initXLbl, initYLbl;
+	var canvas, satMass, earthMass, initX, initY, earthMassLbl, satMassLbl, initXLbl, initYLbl, timeStepLbl, timestep;
 
 	UI = function(opts) {
 		UI.canvas = canvas = document.getElementById(opts.canvas);
@@ -7,18 +7,20 @@
 		earthMass = document.getElementById(opts.earthmass);
 		initX = document.getElementById(opts.initx);
 		initY = document.getElementById(opts.inity);
-
+		timestep = document.getElementById(opts.timestep);
 		earthMassLbl = document.getElementById(opts.earthmasslbl);
-		earthMassLbl.innerHTML = opts.defaultearthmass;
-
+		timeStepLbl = document.getElementById(opts.timesteplbl);
 		satMassLbl = document.getElementById(opts.satmasslbl);
-		satMassLbl.innerHTML = opts.defaultsatmass;
-
 		initXLbl = document.getElementById(opts.initxlbl);
-		initXLbl.innerHTML = opts.defaultinitx;
-
 		initYLbl = document.getElementById(opts.initylbl);
+
+		earthMassLbl.innerHTML = opts.defaultearthmass;
+		timeStepLbl.innerHTML = opts.defaulttimestep;
+		satMassLbl.innerHTML = opts.defaultsatmass;
+		initXLbl.innerHTML = opts.defaultinitx;
 		initYLbl.innerHTML = opts.defaultinity;
+		Physics.setTimestep(opts.defaulttimestep);
+
 
 		$(earthMass).slider({
 			slide: function(event, ui)
@@ -31,6 +33,19 @@
 			min:1,
 			max:100,
 			step:1
+		});
+
+		$(timestep).slider({
+			slide: function(event, ui)
+			{
+				var ts = parseFloat(ui.value);
+				timeStepLbl.innerHTML = ts;
+				Physics.setTimestep(ts);
+			},
+			value:opts.defaulttimestep,
+			min:.01,
+			max:.1,
+			step:.01
 		});
 
 		$(satMass).slider({
