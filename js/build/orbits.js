@@ -1,42 +1,51 @@
 (function(){
-var Orbits, Renderer, Physics, UI, Sat;
-var sats = [], earth, debug;
+var Orbits, sats=[], debug;
 
 (function(){
 	Orbits = function(opts) {
-		earth = opts.settings.earth;
-		Orbits.setEarthMass(earth.m);
 		Orbits.UI = UI(opts.ui);
 		Orbits.Renderer = Renderer(opts.renderer);
 		Orbits.Physics = Physics(opts.physics);
 		debug = document.getElementById("DEBUG");
 		return Orbits;
 	};
-
-	Orbits.setEarthMass = function(mass)
-	{
-		earth.m = mass * 10e10;
-	};
 })();
-(function(){
-	var ctx, earthImg, earthImgLoaded = false;
+var Renderer;
 
+(function(){
+
+	// PRIVATE VARIABLES
+	///i////////////////
+	var ctx;
+
+	// MODULE CONSTRUCTOR
+	/////////////////////
 	Renderer = function(opts) {
 		ctx = UI.canvas.getContext('2d');
-		earthImg = new Image();
-		earthImg.src = opts.earthimg;
-		earthImg.onload = function() { earthImgLoaded = true; };
 		return Renderer;
 	};
 
+
+	// PUBLIC FUNCTIONS
+	///////////////////
 	Renderer.redraw = function()
 	{
 		clearCanvas();
-		for (var sat in sats)
+		for (var s in sats)
 		{
-			sats[sat].draw();
+			var sat = sats[s];
+			this.drawSatellite({
+				x: sat.x,
+				y: sat.y,
+				radius: 3.75,
+				strokeStyle: "#FFFFFF",
+				fillStyle: "#FFFFFF",
+				xpoints:sat.xpoints,
+				ypoints:sat.ypoints,
+				colors:sat.colors,
+				c:sat.c
+			});
 		}
-		drawEarth();
 	};
 
 	Renderer.drawSatellite = function(opts)
@@ -69,29 +78,17 @@ var sats = [], earth, debug;
 		drawCircle(opts);
 	};
 
+	Renderer.drawSatelliteCollision = function(satOne, satTwo)
+	{
+
+	};
+
+	// PRIVATE FUNCTIONS
+	////////////////////
 	function clearCanvas()
 	{
 		ctx.clearRect(0, 0, UI.canvas.width, UI.canvas.height);
 	}
-
-	function drawEarth()
-	{
-		if (earthImgLoaded === false)
-		{
-			drawCircle({
-				x: earth.x,
-				y: earth.y,
-				radius: earth.r,
-				strokeStyle: "#00FF00",
-				fillStyle: "#00FF00"
-			});
-		}
-		else
-		{
-			ctx.drawImage(earthImg, earth.x-earthImg.width/2, earth.y-earthImg.height/2);
-		}
-	}
-
 
 	function drawCircle(opts)
 	{
@@ -112,8 +109,15 @@ var sats = [], earth, debug;
 				ctx.fill();
 			}
 		}
+		else
+		{
+			console.log("Failed");
+
+		}
 	}
 })();
+var Physics;
+
 (function(){
 	var timestep = 1;
 
@@ -134,34 +138,59 @@ var sats = [], earth, debug;
 	Physics.reCalc = function(store)
 	{
 		var collisions = [];
-		for (var i = sats.length-1; i > -1; i--)
-		{
-			var s = sats[i];
-			var d = (s.x - earth.x) * (s.x - earth.x) + (s.y - earth.y) * (s.y - earth.y);
+		var loop = sats.length-1;
 
-			if (d <= earth.r2)
+		for (var i = loop; i > -1; i--)
+		{
+			var satOne = sats[i];
+			var collided = false;
+
+			for (var k = loop; k > -1; k--)
 			{
-				collisions.push(i);
+				var satTwo = sats[k];
+				if (i !== k)
+				{
+					var xDiff = satOne.x - satTwo.x;
+					var yDiff = satOne.y - satTwo.y;
+					var d = xDiff * xDiff + yDiff * yDiff;
+
+					// Check D for a Collision Event Here Otherwise Proceed
+					// Need to handle collision removal much better
+					if ( d <= satTwo.r2)
+					{
+						collisions.push(i);
+						break;
+					}
+					else
+					{
+						var theta = Math.atan2(yDiff, xDiff);
+						var k = -6.673e-3 * satTwo.m * satOne.m / d;
+						//var k = -6.673e-11 * satTwo.m * satOne.m / d;
+						satOne.u += ((k * Math.cos(theta)) / satOne.m) * timestep;
+						satOne.v += ((k * Math.sin(theta)) / satOne.m) * timestep;
+					}
+				}
 			}
-			else
+
+			if (collided === false)
 			{
-				var theta = Math.atan2(s.y - earth.y, s.x - earth.x);
-				var k = -6.67300e-11 * earth.m * s.m / d;
-				s.u += ((k * Math.cos(theta)) / s.m) * timestep;
-				s.v += ((k * Math.sin(theta)) / s.m) * timestep;
+				satOne.x += satOne.u * timestep;
+				satOne.y += satOne.v * timestep;
+
+				if (satOne.x < 0 || satOne. y < 0 || satOne.x > 1000 || satOne.y > 1000)
+				{
+					// Also not correct
+					collisions.push(i);
+				}
 
 				if (store === true)
 				{
-					s.xpoints.push(s.x);
-					s.ypoints.push(s.y);
-					s.colors.push(calcLineColor(s.initSpeed, Math.sqrt((s.u * s.u) + (s.v * s.v))));
+					satOne.xpoints.push(satOne.x);
+					satOne.ypoints.push(satOne.y);
+					satOne.colors.push(calcLineColor(satOne.initSpeed, Math.sqrt((satOne.u * satOne.u) + (satOne.v * satOne.v))));
 				}
-
-				s.x += s.u * timestep;
-				s.y += s.v * timestep;
 			}
 		}
-
 		for (var i = collisions.length-1; i > -1; i--)
 		{
 			sats.splice(collisions[i], 1);
@@ -192,42 +221,30 @@ var sats = [], earth, debug;
 		}
 	}
 })();
+var UI;
+
 (function(){
-	var canvas, satMass, earthMass, initX, initY, earthMassLbl, satMassLbl, initXLbl, initYLbl, timeStepLbl, timestep;
+	var canvas, satMass, initX, initY, satMassLbl, initXLbl, initYLbl, timeStepLbl, timestep, satRadius, satRadiusLbl;
 
 	UI = function(opts) {
 		UI.canvas = canvas = document.getElementById(opts.canvas);
 		satMass = document.getElementById(opts.satmass);
-		earthMass = document.getElementById(opts.earthmass);
 		initX = document.getElementById(opts.initx);
 		initY = document.getElementById(opts.inity);
 		timestep = document.getElementById(opts.timestep);
-		earthMassLbl = document.getElementById(opts.earthmasslbl);
 		timeStepLbl = document.getElementById(opts.timesteplbl);
 		satMassLbl = document.getElementById(opts.satmasslbl);
 		initXLbl = document.getElementById(opts.initxlbl);
 		initYLbl = document.getElementById(opts.initylbl);
+		satRadius = document.getElementById(opts.satradius);
+		satRadiusLbl = document.getElementById(opts.satradiuslbl);
 
-		earthMassLbl.innerHTML = opts.defaultearthmass;
 		timeStepLbl.innerHTML = opts.defaulttimestep;
 		satMassLbl.innerHTML = opts.defaultsatmass;
 		initXLbl.innerHTML = opts.defaultinitx;
 		initYLbl.innerHTML = opts.defaultinity;
+		satRadiusLbl.innerHTML = opts.defaultsatradius;
 		Physics.setTimestep(opts.defaulttimestep);
-
-
-		$(earthMass).slider({
-			slide: function(event, ui)
-			{
-				var mass = parseFloat(ui.value);
-				earthMassLbl.innerHTML = mass;
-				Orbits.setEarthMass(mass);
-			},
-			value:opts.defaultearthmass,
-			min:1,
-			max:100,
-			step:1
-		});
 
 		$(timestep).slider({
 			slide: function(event, ui)
@@ -242,11 +259,21 @@ var sats = [], earth, debug;
 			step:.01
 		});
 
+		$(satRadius).slider({
+			slide: function(event, ui)
+			{
+				satRadiusLbl.innerHTML = ui.value;
+			},
+			value:opts.defaultsatradius,
+			min:1,
+			max:50,
+			step:1
+		});
+
 		$(satMass).slider({
 			slide: function(event, ui)
 			{
-				var mass = parseFloat(ui.value);
-				satMassLbl.innerHTML = mass;
+				satMassLbl.innerHTML = ui.value;
 			},
 			value:opts.defaultsatmass,
 			min:1,
@@ -277,7 +304,6 @@ var sats = [], earth, debug;
 		});
 
 		$(satMass).val(opts.defaultsatmass);
-		$(earthMass).val(opts.defaultearthmass);
 		$(initX).val(opts.defaultinitx);
 		$(initY).val(opts.defaultinity);
 		$(UI.canvas).click(canvasClicked);
@@ -285,8 +311,26 @@ var sats = [], earth, debug;
 		return UI;
 	};
 
+	UI.addSatellite = function(opts)
+	{
+		sats.push({
+			x: opts.x,
+			y: opts.y,
+			m: opts.m*1000,
+			u: opts.u,
+			v: opts.v,
+			c: opts.c,
+			r2: opts.r * opts.r,
+			initSpeed: Math.sqrt(opts.u*opts.u + opts.v*opts.v),
+			xpoints: [],
+			ypoints: [],
+			colors: []
+		});
+	};
+
 	function canvasClicked(e)
 	{
+		// Capture Mouse Cartesian Coordinate at Click Event
 		var top = 0, left = 0, obj = canvas;
 		while (obj.tagName != 'BODY') {
 			top += canvas.offsetTop;
@@ -294,95 +338,68 @@ var sats = [], earth, debug;
 			obj = obj.offsetParent;
 		}
 
-		Orbits.setEarthMass(parseFloat(earthMassLbl.innerHTML));
-
-		sats.push(new Sat({
+		UI.addSatellite({
 			x: parseInt(e.clientX - left + window.pageXOffset),
 			y: parseInt(e.clientY - top + window.pageYOffset),
+			m: parseFloat($(satMass).slider("value")),
 			u: parseFloat($(initX).slider("value")),
 			v: parseFloat($(initY).slider("value")),
-			m: parseFloat($(satMass).slider("value"))
-		}));
-	}
-})();
-(function(){
-	Sat = function(opts) {
-		this.u = opts.u;
-		this.v = opts.v;
-		this.x = opts.x;
-		this.y = opts.y;
-		this.m = opts.m;
-		this.initSpeed = Math.sqrt((opts.u * opts.u) + (opts.v * opts.v));
-		this.xpoints = [];
-		this.ypoints = [];
-		this.colors = [];
-		this.c = opts.c;
-	};
-
-	Sat.prototype.draw = function()
-	{
-		Renderer.drawSatellite({
-			x: this.x, 
-			y: this.y,
-			radius: 3.75,
-			strokeStyle: "#FFFFFF",
-			fillStyle: "#FFFFFF",
-			xpoints:this.xpoints,
-			ypoints:this.ypoints,
-			colors:this.colors,
-			c:this.c
+			r: parseFloat($(satRadius).slider("value"))
 		});
-	};
+	}
 })();
 (function(){
 	window.Orbits = Orbits({
 		renderer:{
-			earthimg:"./images/earth.png"
+
 		},
 		physics:{
 
 		},
 		ui:{
 			canvas:"CANVAS_BOARD",
+			satradius:"SAT_RADIUS_INPUT",
+			satradiuslbl:"SAT_RADIUS_LBL",
 			satmass:"SAT_MASS_INPUT",
 			satmasslbl:"SAT_MASS_LBL",
-			earthmass:"EARTH_MASS_INPUT",
-			earthmasslbl:"EARTH_MASS_LBL",
 			initx:"INIT_X_INPUT",
 			initxlbl:"INIT_X_LBL",
 			inity:"INIT_Y_INPUT",
 			initylbl:"INIT_Y_LBL",
 			timesteplbl:"TIME_STEP_LBL",
 			timestep:"TIME_STEP_INPUT",
+			defaultsatradius:5,
 			defaultsatmass:15,
-			defaultearthmass:100,
 			defaultinitx: 0,
 			defaultinity: 1.5,
 			defaulttimestep:.01
 		},
 		settings:{
-			earth: {
-				x: 310,
-				y: 290,
-				r: 10,
-				r2: 10*10,
-				m:50
-			}
+
 		}
 	});
 
-	setInterval(function(){
+	UI.addSatellite({x:300+25, y:200-25, u:0, v:0, m:25, r:5, c:"#FF0000"});
+	UI.addSatellite({x:375, y:275, u:0, v:0, m:25, r:5, c:"#FF0000"});
+	UI.addSatellite({x:300, y:350, u:0, v:0, m:25, r:5, c:"#FFFF00"});
+	UI.addSatellite({x:225-25, y:275+25, u:0, v:0, m:25, r:5, c:"#FFFF00"});
+
+	var times = 100000;
+	var start = 0;
+	var timer = setInterval(function(){
 		Renderer.redraw();
 		for (var i=30; i > -1; i--)
 		{
 			Physics.reCalc();
 		}
 		Physics.reCalc(true);
+		start++;
+		if (times === start)
+		{
+			console.log("Done");
+			clearInterval(timer);
+		}
 	}, 25);
 
-	sats.push(new Sat({x:310, y:180, u:1.5, v:0, m:25, c:"#FF0000"}));
-	sats.push(new Sat({x:310, y:400, u:-1.5, v:0, m:25, c:"#FFFF00"}));
-	sats.push(new Sat({x:200, y:290, u:0, v:1.5, m:25, c:"#FF00FF"}));
-	sats.push(new Sat({x:420, y:290, u:0, v:-1.5, m:25, c:"#00FFFF"}));
 })();
 })();
