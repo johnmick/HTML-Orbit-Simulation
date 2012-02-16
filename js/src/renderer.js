@@ -1,22 +1,39 @@
-(function(){
-	var ctx, earthImg, earthImgLoaded = false;
+var Renderer;
 
+(function(){
+
+	// PRIVATE VARIABLES
+	///i////////////////
+	var ctx;
+
+	// MODULE CONSTRUCTOR
+	/////////////////////
 	Renderer = function(opts) {
 		ctx = UI.canvas.getContext('2d');
-		earthImg = new Image();
-		earthImg.src = opts.earthimg;
-		earthImg.onload = function() { earthImgLoaded = true; };
 		return Renderer;
 	};
 
+
+	// PUBLIC FUNCTIONS
+	///////////////////
 	Renderer.redraw = function()
 	{
 		clearCanvas();
-		for (var sat in sats)
+		for (var s in sats)
 		{
-			sats[sat].draw();
+			var sat = sats[s];
+			this.drawSatellite({
+				x: sat.x,
+				y: sat.y,
+				radius: 3.75,
+				strokeStyle: "#FFFFFF",
+				fillStyle: "#FFFFFF",
+				xpoints:sat.xpoints,
+				ypoints:sat.ypoints,
+				colors:sat.colors,
+				c:sat.c
+			});
 		}
-		drawEarth();
 	};
 
 	Renderer.drawSatellite = function(opts)
@@ -49,29 +66,17 @@
 		drawCircle(opts);
 	};
 
+	Renderer.drawSatelliteCollision = function(satOne, satTwo)
+	{
+
+	};
+
+	// PRIVATE FUNCTIONS
+	////////////////////
 	function clearCanvas()
 	{
 		ctx.clearRect(0, 0, UI.canvas.width, UI.canvas.height);
 	}
-
-	function drawEarth()
-	{
-		if (earthImgLoaded === false)
-		{
-			drawCircle({
-				x: earth.x,
-				y: earth.y,
-				radius: earth.r,
-				strokeStyle: "#00FF00",
-				fillStyle: "#00FF00"
-			});
-		}
-		else
-		{
-			ctx.drawImage(earthImg, earth.x-earthImg.width/2, earth.y-earthImg.height/2);
-		}
-	}
-
 
 	function drawCircle(opts)
 	{
@@ -91,6 +96,11 @@
 				ctx.fillStyle = opts.fillStyle;
 				ctx.fill();
 			}
+		}
+		else
+		{
+			console.log("Failed");
+
 		}
 	}
 })();
