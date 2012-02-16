@@ -9,7 +9,6 @@ BASE_FILES = ${SRC_DIR}/intro.js\
 	${SRC_DIR}/renderer.js\
 	${SRC_DIR}/physics.js\
 	${SRC_DIR}/ui.js\
-	${SRC_DIR}/sat.js\
 	${SRC_DIR}/main.js\
 	${SRC_DIR}/outro.js
 
@@ -35,4 +34,5 @@ ${MIN} : ${BUILD_DIR}/${APP_NAME}.js ${COMPILER}
 
 clean :
 	@@echo "Removing Build Directory Contents:" ${BUILD_DIR}
-	@@rm -f ${BUILD_DIR}/*.*
+	@@rm -f ${BUILD_DIR}/*.js
+	@@rm -f ${BUILD_DIR}/*.min.js
