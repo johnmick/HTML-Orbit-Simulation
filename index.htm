@@ -10,19 +10,12 @@
 
 		<div id="CONTAINER">
 			<div id="TITLE_HEADER">
-				<span>HTML5 Orbit Simulation</span>
+				<span>N-Body JavaScript and HTML5 Simulator</span>
 			</div>
 
 			<div id="CONTROLS">
 				<div class="CONTROL_HEADER">
 					<span class="CONTROL_LABEL">Environment Parameters</span>
-				</div>
-
-				<div class="INPUT_CONTROL_CONTAINER">
-					<span class="INPUT_LABEL">Earth Mass:</span><br/>
-					<span class="INPUT_VALUE" id="EARTH_MASS_LBL"></span>
-					<span class="INPUT_VALUE"> * 10e10</span><br/>
-					<div class="INPUT_SLIDER" id="EARTH_MASS_INPUT"></div>
 				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
@@ -36,6 +29,12 @@
 
 				<div class="CONTROL_HEADER">
 					<span class="CONTROL_LABEL">Next Satellite Parameters</span>
+				</div>
+
+				<div class="INPUT_CONTROL_CONTAINER">
+					<span class="INPUT_LABEL">Satellite Radius:</span><br/>
+					<span class="INPUT_VALUE" id="SAT_RADIUS_LBL"></span><br/>
+					<div class="INPUT_SLIDER" id="SAT_RADIUS_INPUT"></div>
 				</div>
 
 				<div class="INPUT_CONTROL_CONTAINER">
@@ -79,6 +78,6 @@
 
 		<script type="text/javascript" src="./js/ext/jquery-1.7.min.js"></script>
 		<script type="text/javascript" src="./js/ext/jquery-ui-1.8.16.custom.min.js"></script>
-		<script type="text/javascript" src="./js/build/orbits.min.js"></script>	
+		<script type="text/javascript" src="./js/build/orbits.js"></script>	
 	</body>
 </html>
