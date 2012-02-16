@@ -1,39 +1,27 @@
+var UI;
+
 (function(){
-	var canvas, satMass, earthMass, initX, initY, earthMassLbl, satMassLbl, initXLbl, initYLbl, timeStepLbl, timestep;
+	var canvas, satMass, initX, initY, satMassLbl, initXLbl, initYLbl, timeStepLbl, timestep, satRadius, satRadiusLbl;
 
 	UI = function(opts) {
 		UI.canvas = canvas = document.getElementById(opts.canvas);
 		satMass = document.getElementById(opts.satmass);
-		earthMass = document.getElementById(opts.earthmass);
 		initX = document.getElementById(opts.initx);
 		initY = document.getElementById(opts.inity);
 		timestep = document.getElementById(opts.timestep);
-		earthMassLbl = document.getElementById(opts.earthmasslbl);
 		timeStepLbl = document.getElementById(opts.timesteplbl);
 		satMassLbl = document.getElementById(opts.satmasslbl);
 		initXLbl = document.getElementById(opts.initxlbl);
 		initYLbl = document.getElementById(opts.initylbl);
+		satRadius = document.getElementById(opts.satradius);
+		satRadiusLbl = document.getElementById(opts.satradiuslbl);
 
-		earthMassLbl.innerHTML = opts.defaultearthmass;
 		timeStepLbl.innerHTML = opts.defaulttimestep;
 		satMassLbl.innerHTML = opts.defaultsatmass;
 		initXLbl.innerHTML = opts.defaultinitx;
 		initYLbl.innerHTML = opts.defaultinity;
+		satRadiusLbl.innerHTML = opts.defaultsatradius;
 		Physics.setTimestep(opts.defaulttimestep);
-
-
-		$(earthMass).slider({
-			slide: function(event, ui)
-			{
-				var mass = parseFloat(ui.value);
-				earthMassLbl.innerHTML = mass;
-				Orbits.setEarthMass(mass);
-			},
-			value:opts.defaultearthmass,
-			min:1,
-			max:100,
-			step:1
-		});
 
 		$(timestep).slider({
 			slide: function(event, ui)
@@ -48,11 +36,21 @@
 			step:.01
 		});
 
+		$(satRadius).slider({
+			slide: function(event, ui)
+			{
+				satRadiusLbl.innerHTML = ui.value;
+			},
+			value:opts.defaultsatradius,
+			min:1,
+			max:50,
+			step:1
+		});
+
 		$(satMass).slider({
 			slide: function(event, ui)
 			{
-				var mass = parseFloat(ui.value);
-				satMassLbl.innerHTML = mass;
+				satMassLbl.innerHTML = ui.value;
 			},
 			value:opts.defaultsatmass,
 			min:1,
@@ -83,7 +81,6 @@
 		});
 
 		$(satMass).val(opts.defaultsatmass);
-		$(earthMass).val(opts.defaultearthmass);
 		$(initX).val(opts.defaultinitx);
 		$(initY).val(opts.defaultinity);
 		$(UI.canvas).click(canvasClicked);
@@ -91,8 +88,26 @@
 		return UI;
 	};
 
+	UI.addSatellite = function(opts)
+	{
+		sats.push({
+			x: opts.x,
+			y: opts.y,
+			m: opts.m*1000,
+			u: opts.u,
+			v: opts.v,
+			c: opts.c,
+			r2: opts.r * opts.r,
+			initSpeed: Math.sqrt(opts.u*opts.u + opts.v*opts.v),
+			xpoints: [],
+			ypoints: [],
+			colors: []
+		});
+	};
+
 	function canvasClicked(e)
 	{
+		// Capture Mouse Cartesian Coordinate at Click Event
 		var top = 0, left = 0, obj = canvas;
 		while (obj.tagName != 'BODY') {
 			top += canvas.offsetTop;
@@ -100,14 +115,13 @@
 			obj = obj.offsetParent;
 		}
 
-		Orbits.setEarthMass(parseFloat(earthMassLbl.innerHTML));
-
-		sats.push(new Sat({
+		UI.addSatellite({
 			x: parseInt(e.clientX - left + window.pageXOffset),
 			y: parseInt(e.clientY - top + window.pageYOffset),
+			m: parseFloat($(satMass).slider("value")),
 			u: parseFloat($(initX).slider("value")),
 			v: parseFloat($(initY).slider("value")),
-			m: parseFloat($(satMass).slider("value"))
-		}));
+			r: parseFloat($(satRadius).slider("value"))
+		});
 	}
 })();
